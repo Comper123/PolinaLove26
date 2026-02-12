@@ -1,7 +1,9 @@
 import './index.css';
 import Slider from './components/Slider';
-import { memories } from './data/mockData';
+import { letters, memories, wishes } from './data/mockData';
 import Memory from './components/Memory';
+import Letter from './components/Letter';
+import Wish from './components/Wish';
 
 function App() {
   
@@ -31,11 +33,34 @@ function App() {
         </header>
         
         {/* Письма */}
-        <Slider title="Мои письма к тебе" className="mb-12" animationDuration={100}>
-
+        <Slider title="Послания" className="mb-12" animationDuration={100}>
+          {letters.map(letter => (
+            <Letter letter={letter}></Letter>
+          ))}
         </Slider>
 
         {/* Пожелания */}
+        <section className="py-16 px-4 bg-gradient-to-br from-gray-900/80 to-gray-800/80 rounded-3xl shadow-2xl border border-gray-700/50 mb-12">
+          <div className="max-w-7xl mx-auto">
+            {/* Заголовок */}
+            <div className="text-center mb-12">
+              <h2 className="text-4xl md:text-5xl font-bold text-pink-600 mb-4 font-cursive">
+                Пожелания 💝
+              </h2>
+              <p className="text-lg text-white-600 max-w-2xl mx-auto">
+                Мои искренние пожелания для самой прекрасной девушки
+              </p>
+              <div className="w-20 h-1 bg-gradient-to-r from-pink-500 to-red-500 mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            {/* Адаптивная сетка */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {wishes.map((wish, index) => (
+                <Wish key={wish.id} wish={wish} index={index} />
+              ))}
+            </div>
+          </div>
+        </section>
 
         {/* Воспоминания */}
         <Slider title="Воспоминания" className="mb-12" animationDuration={100}>
@@ -46,6 +71,10 @@ function App() {
 
         {/* Причины за которые я тебя люблю */}
         
+        {/* Треки */}
+        
+        {/* Наша галлерея */}
+
         {/* Отсчет до следующего дня любви */}
         
 
