@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback } from 'react';
+import React, { useEffect, useRef, useCallback, useState } from 'react';
 
 export default function Equalizer({ 
   isPlaying, 
@@ -9,81 +9,120 @@ export default function Equalizer({
 }) {
   const barsRef = useRef([]);
   const animationRef = useRef();
-  const lastUpdateRef = useRef(0);
+  const [isMobile, setIsMobile] = useState(false);
 
-  // Функция анимации с использованием requestAnimationFrame
-  const animate = useCallback(() => {
-    if (!isPlaying) return;
+  // Определяем мобильное устройство
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
-    const now = Date.now();
-    // Ограничиваем частоту обновлений до ~60fps (каждые 16ms)
-    if (now - lastUpdateRef.current < 16) {
+  // Простая анимация для мобильных (используем setInterval)
+  const startMobileAnimation = useCallback(() => {
+    const interval = setInterval(() => {
+      barsRef.current.forEach((bar) => {
+        if (!bar) return;
+        
+        // Простая случайная анимация
+        const randomHeight = Math.floor(Math.random() * 70 + 20);
+        bar.style.height = `${randomHeight}%`;
+        bar.style.opacity = 0.4 + (randomHeight / 200);
+      });
+    }, 200);
+
+    return interval;
+  }, []);
+
+  // Анимация для десктопа (requestAnimationFrame)
+  const startDesktopAnimation = useCallback(() => {
+    let lastUpdate = 0;
+
+    const animate = (timestamp) => {
+      if (!isPlaying) return;
+
+      if (timestamp - lastUpdate > 50) { // Ограничиваем до ~20fps на мобильных
+        lastUpdate = timestamp;
+
+        barsRef.current.forEach((bar, index) => {
+          if (!bar) return;
+          
+          const time = Date.now() / 200;
+          const value = Math.sin(index * 0.8 + time) * 0.4 + 0.5;
+          const height = 20 + value * 70;
+          
+          bar.style.height = `${height}%`;
+          bar.style.opacity = 0.4 + value * 0.6;
+        });
+      }
+
       animationRef.current = requestAnimationFrame(animate);
-      return;
-    }
-    lastUpdateRef.current = now;
-
-    barsRef.current.forEach((bar, index) => {
-      if (!bar) return;
-      
-      // Используем синусоиду для более плавной анимации
-      const time = now / 200; // Управляем скоростью
-      const value = Math.sin(index * 0.8 + time) * 0.4 + 0.5; // Значение от 0.1 до 0.9
-      
-      // Высота от 20% до 90%
-      const height = 20 + value * 70;
-      
-      bar.style.height = `${height}%`;
-      bar.style.opacity = 0.4 + value * 0.6;
-    });
+    };
 
     animationRef.current = requestAnimationFrame(animate);
   }, [isPlaying]);
 
   useEffect(() => {
-    if (isPlaying) {
-      // Запускаем анимацию
-      animationRef.current = requestAnimationFrame(animate);
-    } else {
-      // Останавливаем анимацию и сбрасываем высоту
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
-      
-      // Плавно сбрасываем высоту
+    if (!isPlaying) {
+      // Сбрасываем при остановке
       barsRef.current.forEach(bar => {
         if (bar) {
           bar.style.height = '20%';
           bar.style.opacity = '0.3';
         }
       });
+      
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+      return;
+    }
+
+    let mobileInterval;
+    
+    if (isMobile) {
+      // Для мобильных используем setInterval
+      mobileInterval = startMobileAnimation();
+    } else {
+      // Для десктопа используем requestAnimationFrame
+      startDesktopAnimation();
     }
 
     return () => {
+      if (mobileInterval) {
+        clearInterval(mobileInterval);
+      }
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [isPlaying, animate]);
+  }, [isPlaying, isMobile, startMobileAnimation, startDesktopAnimation]);
 
-  // Определяем ширину через inline style вместо Tailwind класса
+  // Принудительно устанавливаем видимые размеры
   const barStyle = {
     width: `${barWidth}px`,
-    transition: 'height 0.1s ease-out, opacity 0.1s ease-out'
+    minWidth: `${barWidth}px`,
+    height: '20%',
+    minHeight: '4px',
+    opacity: 0.3,
+    transition: 'height 0.1s ease-out, opacity 0.1s ease-out',
+    display: 'block', // Убеждаемся, что элемент видим
+    backgroundColor: 'currentColor' // Запасной цвет
   };
 
   return (
-    <div className={`flex items-end gap-0.5 ${height}`}>
+    <div className={`flex items-end gap-0.5 ${height}`} style={{ minHeight: '20px' }}>
       {[...Array(bars)].map((_, i) => (
         <div
           key={i}
           ref={el => barsRef.current[i] = el}
           className={`rounded-full ${color}`}
-          style={{ 
-            ...barStyle,
-            height: '20%',
-            opacity: 0.3
-          }}
+          style={barStyle}
         />
       ))}
     </div>
