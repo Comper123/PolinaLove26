@@ -191,7 +191,6 @@ export const reasons = [
   { id: 16, text: "Твоя теплота", emoji: "🔥" },
 ];
 
-// Данные для галереи
 export const photos = [
   {
     id: 1,
