@@ -258,3 +258,51 @@ export const photos = [
     emoji: "👐"
   }
 ];
+
+export const tracks = [
+  {
+    id: 1,
+    title: "Замок",
+    artist: "Thomas Mraz",
+    duration: "3:39",
+    cover: "/posters/zamok.jpg",
+    color: "from-pink-500 to-rose-500",
+    song: "/music/Zamok.mp3" // Замени на свои файлы
+  },
+  {
+    id: 2,
+    title: "Снимай это",
+    artist: "Бриллиантовый Ти",
+    duration: "3:12",
+    cover: "/posters/Cnimy.jpg",
+    color: "from-purple-500 to-indigo-500",
+    song: "/music/Cnimy.mp3"
+  },
+  {
+    id: 3,
+    title: "На ощупь",
+    artist: "Минаева",
+    duration: "5:19",
+    cover: "/posters/Oschyp.png",
+    color: "from-blue-500 to-cyan-500",
+    song: "/music/Oschyp.mp3"
+  },
+  {
+    id: 4,
+    title: "Соленое счастье",
+    artist: "Алена Мамушкина",
+    duration: "3:37",
+    cover: "/posters/Salt.png",
+    color: "from-emerald-500 to-teal-500",
+    song: "/music/Salt.mp3"
+  },
+  {
+    id: 5,
+    title: "Фонари",
+    artist: "Вато",
+    duration: "2:06",
+    cover: "/posters/Vato.png",
+    color: "from-amber-500 to-orange-500",
+    song: "/music/Vato.mp3"
+  }
+];

@@ -8,6 +8,8 @@ import { useState } from 'react';
 import Reason from './components/Reason';
 import Countdown from './components/CountDown';
 import PhotoGallery from './components/PhotoGallery';
+import MusicPlayer from './components/MusicPlayer';
+
 
 function App() {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -118,6 +120,7 @@ function App() {
         </section>
 
         {/* Треки */}
+        <MusicPlayer></MusicPlayer>
 
         {/* Отсчет до следующего дня любви */}
         <div className="mt-12 mb-8">
