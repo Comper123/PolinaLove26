@@ -114,7 +114,7 @@ const MusicPlayer = () => {
                   <div className="absolute bottom-2 right-2">
                     <div className="w-8 h-8 md:w-10 md:h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/30">
                       {isPlaying ? (
-                        <Equalizer isPlaying={isPlaying} color={'bg-slate-200'}></Equalizer>
+                        <Equalizer isPlaying={isPlaying} color={'bg-slate-200'} height={'h-6'}></Equalizer>
                       ) : (
                         <Play />
                       )}
@@ -254,7 +254,7 @@ const MusicPlayer = () => {
                   
                   {/* Индикатор текущего трека */}
                   {currentTrack === index && isPlaying && (
-                    <Equalizer isPlaying={isPlaying} bars={4} barWidth={2} height={'h-8'}
+                    <Equalizer isPlaying={isPlaying} bars={4} barWidth={2} height={'h-6'}
                     color={'bg-gradient-to-t from-pink-500 to-purple-500'}></Equalizer>
                   )}
                 </button>
